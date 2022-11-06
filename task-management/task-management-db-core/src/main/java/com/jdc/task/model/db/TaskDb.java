@@ -35,9 +35,12 @@ public class TaskDb implements TaskDao{
 				insert into task (name, owner_id, project_id, date_from, date_to, status, remark) 
 				values (?, ?, ?, ?, ?, ?, ?)
 				""";
+		
+		var taskDateSql = "insert into task_date (task_id, task_date) values (? , ?)";
 
 		try(var conn = DataSourceManager.dataSource().getConnection();
-				var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+				var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				var taskDateStmt = conn.prepareStatement(taskDateSql)) {
 			
 			stmt.setString(1, form.name());
 			stmt.setInt(2, form.ownerId());
@@ -52,7 +55,22 @@ public class TaskDb implements TaskDao{
 			var rs = stmt.getGeneratedKeys();
 			
 			while(rs.next()) {
-				return rs.getInt(1);
+				var id = rs.getInt(1);
+				
+				var target = form.dateFrom();
+				
+				while(target.compareTo(form.dateTo()) <= 0) {
+					
+					taskDateStmt.setInt(1, id);
+					taskDateStmt.setDate(2, Date.valueOf(target));
+					taskDateStmt.addBatch();
+					
+					target = target.plusDays(1);
+				}
+				
+				taskDateStmt.executeBatch();
+				
+				return id;
 			}
 			
 		} catch (SQLException e) {
@@ -68,9 +86,43 @@ public class TaskDb implements TaskDao{
 				update task set name = ?, owner_id = ?, project_id = ?, date_from = ?, date_to = ?, 
 				status = ?, remark = ? where id = ?
 				""";
+		var taskDateSql = "insert into task_date (task_id, task_date) values (? , ?)";
+		
+		var taskDateDelSql = "delete from task_date where task_id = ?";
 
 		try(var conn = DataSourceManager.dataSource().getConnection();
-				var stmt = conn.prepareStatement(sql)) {
+				var stmt = conn.prepareStatement(sql); 
+				var taskDelStmt = conn.prepareStatement(taskDateDelSql);
+				var taskDateStmt = conn.prepareStatement(taskDateSql)) {
+			stmt.setString(1, form.name());
+			stmt.setInt(2, form.ownerId());
+			stmt.setInt(3, form.projectId());
+			stmt.setDate(4, Date.valueOf(form.dateFrom()));
+			stmt.setDate(5, Date.valueOf(form.dateTo()));
+			stmt.setString(6, form.status().name());
+			stmt.setString(7, form.remark());
+			stmt.setInt(8, id);
+			
+			stmt.executeUpdate();
+			
+			// Delete Task Date (Delete Insert for Update)
+			taskDelStmt.setInt(1, id);
+			taskDelStmt.executeUpdate();
+			
+			// Add Task Date Again
+			var target = form.dateFrom();
+			
+			while(target.compareTo(form.dateTo()) <= 0) {
+				
+				taskDateStmt.setInt(1, id);
+				taskDateStmt.setDate(2, Date.valueOf(target));
+				taskDateStmt.addBatch();
+				
+				target = target.plusDays(1);
+			}
+			
+			taskDateStmt.executeBatch();
+			
 			
 		} catch (SQLException e) {
 			throw new TaskAppException(List.of(e.getMessage()), e);
@@ -109,11 +161,12 @@ public class TaskDb implements TaskDao{
 	public List<Task> search(Status status, String owner, LocalDate from, LocalDate to) {
 		var result = new ArrayList<Task>();
 		var sql = new StringBuffer("""
-				select t.id, t.name, t.date_from, t.date_to, t.status, t.remark, 
+				select distinct t.id, t.name, t.date_from, t.date_to, t.status, t.remark, 
 				to.id, to.name, p.id, p.name, po.id, po.name from task t 
 				join account to on to.id = t.owner_id 
 				join project p on p.id = t.project_id 
 				join account po on po.id = p.owner_id 
+				join task_date td on td.task_id = t.id 
 				where 1 = 1""");
 		var params = new ArrayList<>();
 		
@@ -123,17 +176,18 @@ public class TaskDb implements TaskDao{
 		}
 		
 		if(!StringUtils.isEmpty(owner)) {
-			sql.append(" and lower(to.name) like ?");
+			sql.append(" and (lower(to.name) = ? or lower(to.name) like ?)");
+			params.add(StringUtils.lower(owner));
 			params.add(StringUtils.lowerLike(owner));
 		}
 		
 		if(null != from) {
-			sql.append(" and t.start_date >= ?");
+			sql.append(" and td.taks_date >= ?");
 			params.add(Date.valueOf(from));
 		}
 		
 		if(null != to) {
-			sql.append(" and t.end_date <= ?");
+			sql.append(" and td.task_date <= ?");
 			params.add(Date.valueOf(to));
 		}
 

@@ -39,7 +39,7 @@ public class AccountDaoTest {
 	@BeforeEach
 	void before() {
 		dao = new AccountDb();
-		DbUtils.truncate("account", "project", "task");
+		DbUtils.truncate("account", "project", "task", "task_date");
 		
 		DbUtils.execute(
 				"insert into account (name, email, role, password, entry_date) values ('Thidar', 'thidar@gmail.com', 'Manager', 'password', '2022-11-01');",

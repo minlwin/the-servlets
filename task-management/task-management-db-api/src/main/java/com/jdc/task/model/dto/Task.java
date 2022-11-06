@@ -19,7 +19,7 @@ public record Task(
 		) {
 	
 	public enum Status {
-		Create, Open, Late, Finished
+		Open, Started, Late, Finished
 	}
 
 }
