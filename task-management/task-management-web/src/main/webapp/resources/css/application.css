@@ -1,0 +1,17 @@
+html {
+	height: 100vh;
+}
+
+body {
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	background-image: url("../images/cover.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
+.loginForm {
+	width: 320px !important;
+}

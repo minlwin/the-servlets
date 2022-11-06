@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:web="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+	version="5.0">
+	<display-name>task-management-web</display-name>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Manager Resources</web-resource-name>
+			<url-pattern>/manager/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Manager</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Member Resources</web-resource-name>
+			<url-pattern>/member/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Member</role-name>
+			<role-name>Manager</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/login</form-login-page>
+			<form-error-page>/login?error=1</form-error-page>
+		</form-login-config>
+	</login-config>
+	
+	<security-role>
+		<role-name>Manager</role-name>
+	</security-role>
+	<security-role>
+		<role-name>Member</role-name>
+	</security-role>
+
+	<resource-ref>
+		<description>DB Connection</description>
+		<res-ref-name>jdbc/TaskDB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	
+</web-app>
