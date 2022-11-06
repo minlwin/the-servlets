@@ -3,10 +3,13 @@ package com.jdc.task.test.db;
 import static com.jdc.task.test.HasRecordComponent.hasRecordComponent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -26,6 +29,7 @@ import com.jdc.task.model.dto.Task.Status;
 import com.jdc.task.model.dto.form.TaskForm;
 import com.jdc.task.model.utils.DataSourceManager;
 import com.jdc.task.model.utils.DbUtils;
+import com.jdc.task.model.utils.StringUtils;
 import com.jdc.task.test.TestDataSource;
 
 public class TaskDaoTest {
@@ -122,7 +126,7 @@ public class TaskDaoTest {
 				hasRecordComponent("dateFrom", is(dateFrom)),
 				hasRecordComponent("dateTo", is(dateTo)),
 				hasRecordComponent("status", is(status)),
-				hasRecordComponent("remark", is(remark)),
+				hasRecordComponent("remark", StringUtils.isEmpty(remark) ? anyOf(emptyString(), nullValue()) : is(remark)),
 				hasRecordComponent("taskOwnerId", is(ownerId)),
 				hasRecordComponent("taskOwnerName", is(ownerName)),
 				hasRecordComponent("projectId", is(projectId)),
@@ -145,7 +149,7 @@ public class TaskDaoTest {
 				hasRecordComponent("dateFrom", is(dateFrom)),
 				hasRecordComponent("dateTo", is(dateTo)),
 				hasRecordComponent("status", is(status)),
-				hasRecordComponent("remark", is(remark)),
+				hasRecordComponent("remark", StringUtils.isEmpty(remark) ? anyOf(emptyString(), nullValue()) : is(remark)),
 				hasRecordComponent("taskOwnerId", is(ownerId)),
 				hasRecordComponent("taskOwnerName", is(ownerName)),
 				hasRecordComponent("projectId", is(projectId)),

@@ -133,8 +133,8 @@ public class TaskDb implements TaskDao{
 	public Task findById(int id) {
 		var sql = """
 				select t.id, t.name, t.date_from, t.date_to, t.status, t.remark, 
-				to.id, to.name, p.id, p.name, po.id, po.name from task t 
-				join account to on to.id = t.owner_id 
+				tao.id, tao.name, p.id, p.name, p.description, po.id, po.name from task t 
+				join account tao on tao.id = t.owner_id 
 				join project p on p.id = t.project_id 
 				join account po on po.id = p.owner_id 
 				where t.id = ?
@@ -152,6 +152,7 @@ public class TaskDb implements TaskDao{
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new TaskAppException(List.of(e.getMessage()), e);
 		}
 		return null;
@@ -162,8 +163,8 @@ public class TaskDb implements TaskDao{
 		var result = new ArrayList<Task>();
 		var sql = new StringBuffer("""
 				select distinct t.id, t.name, t.date_from, t.date_to, t.status, t.remark, 
-				to.id, to.name, p.id, p.name, po.id, po.name from task t 
-				join account to on to.id = t.owner_id 
+				tao.id, tao.name, p.id, p.name, p.description, po.id, po.name from task t 
+				join account tao on tao.id = t.owner_id 
 				join project p on p.id = t.project_id 
 				join account po on po.id = p.owner_id 
 				join task_date td on td.task_id = t.id 
@@ -176,13 +177,13 @@ public class TaskDb implements TaskDao{
 		}
 		
 		if(!StringUtils.isEmpty(owner)) {
-			sql.append(" and (lower(to.name) = ? or lower(to.name) like ?)");
+			sql.append(" and (lower(tao.name) = ? or lower(tao.name) like ?)");
 			params.add(StringUtils.lower(owner));
 			params.add(StringUtils.lowerLike(owner));
 		}
 		
 		if(null != from) {
-			sql.append(" and td.taks_date >= ?");
+			sql.append(" and td.task_date >= ?");
 			params.add(Date.valueOf(from));
 		}
 		
