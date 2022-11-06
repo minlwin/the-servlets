@@ -2,6 +2,7 @@ package com.jdc.task.model.db;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ProjectDb implements ProjectDao{
 		var sql = "insert into project (name, owner_id, start_date, description, finished) values (?, ?, ?, ?, ?)";
 		
 		try(var conn = DataSourceManager.dataSource().getConnection(); 
-				var stmt = conn.prepareStatement(sql)) {
+				var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			
 			stmt.setString(1, form.name());
 			stmt.setInt(2, form.ownerId());
@@ -57,7 +58,7 @@ public class ProjectDb implements ProjectDao{
 
 	@Override
 	public void update(int id, ProjectForm form) {
-		var sql = "update project name = ?, owner_id = ?, start_date = ?, description = ? where id = ?";
+		var sql = "update project set name = ?, owner_id = ?, start_date = ?, description = ?, finished = ? where id = ?";
 		
 		try(var conn = DataSourceManager.dataSource().getConnection(); 
 				var stmt = conn.prepareStatement(sql)) {
@@ -65,7 +66,8 @@ public class ProjectDb implements ProjectDao{
 			stmt.setInt(2, form.ownerId());
 			stmt.setDate(3, Date.valueOf(form.startDate()));
 			stmt.setString(4, form.description());
-			stmt.setInt(5, id);
+			stmt.setBoolean(5, form.finished());
+			stmt.setInt(6, id);
 			
 			stmt.executeUpdate();
 			
@@ -107,7 +109,8 @@ public class ProjectDb implements ProjectDao{
 		var params = new ArrayList<>();
 		
 		if(!StringUtils.isEmpty(ownerName)) {
-			sql.append(" and lower(a.name) like ?");
+			sql.append(" and (lower(a.name) = ? or lower(a.name) like ?)");
+			params.add(StringUtils.lower(ownerName));
 			params.add(StringUtils.lowerLike(ownerName));
 		}
 		
@@ -122,7 +125,7 @@ public class ProjectDb implements ProjectDao{
 		}
 		
 		if(null != finished) {
-			sql.append(" and p.finished >= ?");
+			sql.append(" and p.finished = ?");
 			params.add(finished);
 		}
 

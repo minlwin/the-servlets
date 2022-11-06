@@ -16,6 +16,10 @@ public class StringUtils {
 		return null != str && !str.isEmpty();
 	}
 
+	public static Object lower(String str) {
+		return str.toLowerCase();
+	}
+
 	public static String lowerLike(String str) {
 		return str.toLowerCase().concat("%");
 	}
@@ -39,4 +43,5 @@ public class StringUtils {
 	public static Boolean parseBoolean(String str) {
 		return isNotEmpty(str) ? Boolean.parseBoolean(str) : null;
 	}
+
 }

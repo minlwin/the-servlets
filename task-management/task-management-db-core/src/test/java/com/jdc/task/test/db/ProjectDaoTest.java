@@ -1,5 +1,6 @@
 package com.jdc.task.test.db;
 
+import static com.jdc.task.test.HasRecordComponent.hasRecordComponent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasProperty;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.jdc.task.model.TaskAppException;
@@ -45,6 +47,12 @@ public class ProjectDaoTest {
 				"insert into account (name, email, role, password, entry_date) values ('Ko Ko', 'koko@gmail.com', 'Member', 'password', '2022-11-01');",
 				"insert into account (name, email, role, password, entry_date) values ('Nyi Nyi', 'nyinyi@gmail.com', 'Member', 'password', '2022-11-01');"
 				);
+		
+		DbUtils.execute(
+				"insert into project (name, owner_id, description, start_date, finished) values ('Task Management', 1, 'Servlet Demo Project', '2022-11-01', false);",
+				"insert into project (name, owner_id, description, start_date, finished) values ('POS Management', 1, 'Spring Angular Project', '2022-06-01', true);",
+				"insert into project (name, owner_id, description, start_date, finished) values ('HR Management', 2, 'Mobile Project', '2022-10-01', false);"				
+		);
 	}
 	
 	@ParameterizedTest
@@ -68,21 +76,46 @@ public class ProjectDaoTest {
 		
 		assertThat(exception, allOf(
 				notNullValue(),
-				hasProperty("errors", hasSize(errors))
+				hasProperty("messages", hasSize(errors))
 				));
 	}
 	
 	
 	@ParameterizedTest
 	@CsvFileSource(resources = "/project/test_update.tsv", delimiter = '\t')
-	void test_update(int id, String name, int ownerId, String description, LocalDate startDate, boolean finished) {
+	void test_update(int id, String name, int ownerId, String ownerName, String description, LocalDate startDate, boolean finished) {
+		var form = new ProjectForm(name, ownerId, description, startDate, finished);
 		
+		dao.update(id, form);
+		
+		var dto = dao.findById(id);
+		
+		assertThat(dto, allOf(
+				hasRecordComponent("id", is(id)),
+				hasRecordComponent("name", is(name)),
+				hasRecordComponent("ownerId", is(ownerId)),
+				hasRecordComponent("ownerName", is(ownerName)),
+				hasRecordComponent("description", is(description)),
+				hasRecordComponent("start", is(startDate)),
+				hasRecordComponent("finished", is(finished))
+		));
 	}
 	
 	@ParameterizedTest
 	@CsvFileSource(resources = "/project/test_find_by_id.tsv", delimiter = '\t')
-	void test_find_by_id(int id, String name, int ownerId, String description, LocalDate startDate, boolean finished) {
+	void test_find_by_id(int id, String name, int ownerId, String ownerName, String description, LocalDate startDate, boolean finished) {
 		
+		var dto = dao.findById(id);
+		
+		assertThat(dto, allOf(
+				hasRecordComponent("id", is(id)),
+				hasRecordComponent("name", is(name)),
+				hasRecordComponent("ownerId", is(ownerId)),
+				hasRecordComponent("ownerName", is(ownerName)),
+				hasRecordComponent("description", is(description)),
+				hasRecordComponent("start", is(startDate)),
+				hasRecordComponent("finished", is(finished))
+		));
 	}
 	
 	@ParameterizedTest
@@ -92,8 +125,19 @@ public class ProjectDaoTest {
 	}
 	
 	@ParameterizedTest
-	void test_search() {
-		
+	@CsvSource({
+		",,,,3",
+		",,,false,2",
+		",,,true,1",
+		"Thidar,,,true,1",
+		"thi,,,true,1",
+		"thi,,2022-06-01,true,1",
+		"thi,pos,2022-06-01,true,1",
+		"thi,post,,true,0"
+	})
+	void test_search(String ownerName, String projectName, LocalDate date, Boolean finished, int size) {
+		var result = dao.search(ownerName, projectName, date, finished);		
+		assertThat(result, hasSize(size));
 	}
 
 }

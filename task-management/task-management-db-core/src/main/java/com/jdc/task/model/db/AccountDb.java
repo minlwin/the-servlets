@@ -128,7 +128,8 @@ public class AccountDb implements AccountDao{
 		}
 		
 		if(StringUtils.isNotEmpty(name)) {
-			sql.append(" and lower(name) like ?");
+			sql.append(" and (lower(name) = ? or lower(name) like ?)");
+			params.add(StringUtils.lower(name));
 			params.add(StringUtils.lowerLike(name));
 		}
 
