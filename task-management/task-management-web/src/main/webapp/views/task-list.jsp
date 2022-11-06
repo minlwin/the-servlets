@@ -25,6 +25,44 @@
 	<div class="container mt-4">
 		<h3><i class="bi bi-list"></i> Task Management</h3>
 		
+		<form class="row my-3">
+			<div class="col-auto">
+				<label class="form-label">Status</label>
+				<select name="status" class="form-select">
+					<option value="">All Status</option>
+					<option value="false" ${ param.status eq 'Open'  ? 'selected' : '' }>Open</option>
+					<option value="true" ${ param.status eq 'Started' ? 'selected' : '' }>Started</option>
+					<option value="true" ${ param.status eq 'Late' ? 'selected' : '' }>Late</option>
+					<option value="true" ${ param.status  eq 'Finished' ? 'selected' : '' }>Finished</option>
+				</select>
+			</div>
+			
+			<div class="col-auto">
+				<label class="form-label">Date From</label>
+				<input type="date" class="form-control" name="from" value="${ param.from }" />
+			</div>
+
+			<div class="col-auto">
+				<label class="form-label">Date To</label>
+				<input type="date" class="form-control" name="to" value="${ param.to }" />
+			</div>
+
+			<div class="col-4">
+				<label class="form-label">Project Name</label>
+				<input type="text" class="form-control" name="owner" placeholder="Search Task Owner Name" value="${ param.owner }" />
+			</div>
+			
+			<div class="col-auto form-btns">
+				<button class="btn btn-primary">
+					<i class="bi bi-search"></i> Search
+				</button>
+				
+				<button class="btn btn-danger me-2">
+					<i class="bi bi-plus-lg"></i> Add New			
+				</button>
+			</div>
+		</form>		
+		
 	</div>
 
 

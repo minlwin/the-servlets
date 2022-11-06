@@ -23,7 +23,37 @@
 
 	<div class="container mt-4">
 		<h3><i class="bi bi-puzzle"></i> Project Management</h3>
-		
+
+		<form class="row my-3">
+			<div class="col-auto">
+				<label class="form-label">Status</label>
+				<select name="finished" class="form-select">
+					<option value="">All Status</option>
+					<option value="false" ${ not param.finished  ? 'selected' : '' }>Running</option>
+					<option value="true" ${ param.finished ? 'selected' : '' }>Finished</option>
+				</select>
+			</div>
+			
+			<div class="col-auto">
+				<label class="form-label">Date From</label>
+				<input type="date" class="form-control" name="date" value="${ param.date }" />
+			</div>
+
+			<div class="col-4">
+				<label class="form-label">Project Name</label>
+				<input type="text" class="form-control" name="name" placeholder="Search Member Name" value="${ param.name }" />
+			</div>
+			
+			<div class="col-auto form-btns">
+				<button class="btn btn-primary">
+					<i class="bi bi-search"></i> Search
+				</button>
+				
+				<button class="btn btn-danger me-2">
+					<i class="bi bi-plus-lg"></i> Add New			
+				</button>
+			</div>
+		</form>		
 	</div>
 
 </body>

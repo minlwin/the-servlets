@@ -15,3 +15,7 @@ body {
 .loginForm {
 	width: 320px !important;
 }
+
+.form-btns {
+	padding-top: 2rem !important;
+}

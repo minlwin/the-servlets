@@ -24,6 +24,62 @@
 	<div class="container mt-4">
 		<h3><i class="bi bi-people"></i> Member Management</h3>
 		
+		<form class="row my-3">
+			<div class="col-auto">
+				<label class="form-label">Role</label>
+				<select name="role" class="form-select">
+					<option value="">All Roles</option>
+					<option value="Manager" ${ param.role eq 'Manager' ? 'selected' : '' }>Manager</option>
+					<option value="Member" ${ param.role eq 'Member' ? 'selected' : '' }>Member</option>
+				</select>
+			</div>
+			
+			<div class="col-4">
+				<label class="form-label">Member Name</label>
+				<input type="text" class="form-control" name="name" placeholder="Search Member Name" value="${ param.name }" />
+			</div>
+			
+			<div class="col-auto form-btns">
+				<button class="btn btn-primary">
+					<i class="bi bi-search"></i> Search
+				</button>
+				
+				<button class="btn btn-danger me-2">
+					<i class="bi bi-plus-lg"></i> Add New			
+				</button>
+			</div>
+		</form>
+		
+		<c:if test="${ not empty list }">
+			<table class="table table-striped bg-light">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Role</th>
+						<th>Email</th>
+						<th>Entry Date</th>
+						<th></th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<c:forEach var="item" items="${ list }">
+						<tr>
+							<td>${ item.id() }</td>
+							<td>${ item.name() }</td>
+							<td>${ item.role() }</td>
+							<td>${ item.email() }</td>
+							<td>${ item.entryDate() }</td>
+							<td></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		
+		</c:if>
+		
+		
 	</div>
 	
 
