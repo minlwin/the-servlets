@@ -58,6 +58,9 @@ public class ProjectDb implements ProjectDao{
 
 	@Override
 	public void update(int id, ProjectForm form) {
+		
+		validate(form);
+
 		var sql = "update project set name = ?, owner_id = ?, start_date = ?, description = ?, finished = ? where id = ?";
 		
 		try(var conn = DataSourceManager.dataSource().getConnection(); 

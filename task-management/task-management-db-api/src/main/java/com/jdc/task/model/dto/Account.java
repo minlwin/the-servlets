@@ -13,4 +13,8 @@ public record Account(
 	public enum Role {
 		Manager, Member
 	}
+	
+	public boolean isManager() {
+		return role == Role.Manager;
+	}
 }

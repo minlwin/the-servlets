@@ -49,11 +49,58 @@
 					<i class="bi bi-search"></i> Search
 				</button>
 				
-				<button class="btn btn-danger me-2">
-					<i class="bi bi-plus-lg"></i> Add New			
-				</button>
+				<c:if test="${ loginUser.manager }">
+					<c:url var="addNew" value="/manager/project/edit"></c:url>
+					<a hreflang="${ addNew }" class="btn btn-danger me-2">
+						<i class="bi bi-plus-lg"></i> Add New			
+					</a>
+				</c:if>
 			</div>
-		</form>		
+		</form>	
+		
+		<c:if test="${ not empty list }">
+			
+			<table class="table table-striped bg-light">
+				
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Project Manager</th>
+						<th>Start Date</th>
+						<th>Description</th>
+						<th>Status</th>
+						<c:if test="${ loginUser.manager }">
+							<th></th>
+						</c:if>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<c:forEach items="${ list }" var="item">
+						
+						<tr class="align-middle">
+							<td>${ item.id() }</td>
+							<td>${ item.name() }</td>
+							<td>${ item.ownerName() }</td>
+							<td>${ item.start() }</td>
+							<td>${ item.description() }</td>
+							<td>${ item.finished() ? 'Finished' : 'On Going' }</td>
+							<c:if test="${ loginUser.manager }">
+								<td>
+									<c:url var="edit" value="/manager/project/edit">
+										<c:param name="id" value="${ item.id() }"></c:param>
+									</c:url>
+								</td>
+							</c:if>
+						</tr>
+					
+					</c:forEach>
+				</tbody>
+				
+			</table>
+		
+		</c:if>	
 	</div>
 
 </body>

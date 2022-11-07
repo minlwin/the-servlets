@@ -29,12 +29,13 @@ public class AccountDb implements AccountDao{
 	@Override
 	public int create(AccountForm form) {
 		
+		validate(form, true);
+
 		var sql = "insert into account (name, email, password, role, entry_date) values (?, ?, ?, ?, ?)";
 		
 		try(var conn = DataSourceManager.dataSource().getConnection();
 				var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			
-			validate(form, true);
 			
 			stmt.setString(1, form.name());
 			stmt.setString(2, form.email());
@@ -58,6 +59,8 @@ public class AccountDb implements AccountDao{
 
 	@Override
 	public void update(int id, AccountForm form) {
+
+		validate(form, false);
 		
 		var sql = "update account set name = ?, email = ?, role = ? where id = ?";
 		

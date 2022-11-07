@@ -76,7 +76,7 @@ public class AccountServlet extends HttpServlet{
 				accountDao.create(new AccountForm(name, StringUtils.parseRole(role), email, password));
 			}
 			
-			resp.sendRedirect("/member/account");
+			resp.sendRedirect(req.getContextPath().concat("/member/account"));
 			
 		} catch (TaskAppException e) {
 			req.setAttribute("errors", e.getMessages());

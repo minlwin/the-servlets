@@ -82,6 +82,9 @@ public class TaskDb implements TaskDao{
 
 	@Override
 	public void update(int id, TaskForm form) {
+
+		validate(form);
+
 		var sql = """
 				update task set name = ?, owner_id = ?, project_id = ?, date_from = ?, date_to = ?, 
 				status = ?, remark = ? where id = ?

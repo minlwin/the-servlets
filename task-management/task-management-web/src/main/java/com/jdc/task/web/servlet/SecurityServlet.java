@@ -38,8 +38,8 @@ public class SecurityServlet extends HttpServlet {
 				var password = req.getParameter("password");
 
 				req.login(username, password);
-
-				req.setAttribute("loginUser", accountDao.findByEmail(username));
+				
+				req.getSession().setAttribute("loginUser", accountDao.findByEmail(username));
 			} else {
 				req.logout();
 			}

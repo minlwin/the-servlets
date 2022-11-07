@@ -19,3 +19,8 @@ body {
 .form-btns {
 	padding-top: 2rem !important;
 }
+
+ul.alert > li {
+	list-style-type: none;
+	padding-left: 0.7rem;
+}

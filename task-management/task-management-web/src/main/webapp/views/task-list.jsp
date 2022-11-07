@@ -56,12 +56,52 @@
 				<button class="btn btn-primary">
 					<i class="bi bi-search"></i> Search
 				</button>
-				
-				<button class="btn btn-danger me-2">
-					<i class="bi bi-plus-lg"></i> Add New			
-				</button>
 			</div>
-		</form>		
+		</form>	
+		
+		<c:if test="${ not empty list }">
+			
+			<table class="table table-striped bg-light">
+				
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Project</th>
+						<th>Task</th>
+						<th>Owner</th>
+						<th>Start</th>
+						<th>End</th>
+						<th>Status</th>
+						<th>Remark</th>
+						<th></th>
+					</tr>
+				</thead>
+				
+				<tbody>
+				
+					<c:forEach items="${ list }" var="item">
+						
+						<tr>
+							<td>${ item.id() }</td>
+							<td>${ item.projectName() }</td>
+							<td>${ item.taskName() }</td>
+							<td>${ item.taskOwnerName() }</td>
+							<td>${ item.dateFrom() }</td>
+							<td>${ item.dateTo() }</td>
+							<td>${ item.status() }</td>
+							<td>${ item.remark() }</td>
+							<td>
+								<c:url value="" var="edit"></c:url>
+							</td>
+						</tr>
+					
+					</c:forEach>
+				
+				</tbody>
+				
+			</table>
+		
+		</c:if>	
 		
 	</div>
 
