@@ -29,8 +29,8 @@
 				<label class="form-label">Status</label>
 				<select name="finished" class="form-select">
 					<option value="">All Status</option>
-					<option value="false" ${ not param.finished  ? 'selected' : '' }>Running</option>
-					<option value="true" ${ param.finished ? 'selected' : '' }>Finished</option>
+					<option value="false" ${ param.finished eq 'false'  ? 'selected' : '' }>Running</option>
+					<option value="true" ${ param.finished eq 'true' ? 'selected' : '' }>Finished</option>
 				</select>
 			</div>
 			
@@ -51,7 +51,7 @@
 				
 				<c:if test="${ loginUser.manager }">
 					<c:url var="addNew" value="/manager/project/edit"></c:url>
-					<a hreflang="${ addNew }" class="btn btn-danger me-2">
+					<a href="${ addNew }" class="btn btn-danger me-2">
 						<i class="bi bi-plus-lg"></i> Add New			
 					</a>
 				</c:if>
@@ -88,9 +88,12 @@
 							<td>${ item.finished() ? 'Finished' : 'On Going' }</td>
 							<c:if test="${ loginUser.manager }">
 								<td>
-									<c:url var="edit" value="/manager/project/edit">
+									<c:url var="details" value="/member/project">
 										<c:param name="id" value="${ item.id() }"></c:param>
 									</c:url>
+									<a href="${ details }" class="btn btn-link">
+										<i class="bi bi-send"></i>
+									</a>
 								</td>
 							</c:if>
 						</tr>
