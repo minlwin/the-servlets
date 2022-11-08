@@ -58,7 +58,6 @@ public class TaskServlet extends HttpServlet{
 		var page = switch (path) {
 		case "/manager/task/edit", "/member/task/edit": {
 			req.setAttribute("project", projectDao.findById(projectId));
-			req.setAttribute("projects", projectDao.search(null, null, null, false));
 			req.setAttribute("members", accountDao.search(null, null));
 			yield "task-edit";
 		}
@@ -76,15 +75,16 @@ public class TaskServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
+		var id = StringUtils.parseInt(req.getParameter("id"));
+		var name = req.getParameter("name");
+		var project = StringUtils.parseInt(req.getParameter("project"));
+		var owner = StringUtils.parseInt(req.getParameter("owner"));
+		var status = StringUtils.parseStatus(req.getParameter("status"));
+		var from = StringUtils.parseDate(req.getParameter("from"));
+		var to = StringUtils.parseDate(req.getParameter("to"));
+		var remark = req.getParameter("remark");
+
 		try {
-			var id = StringUtils.parseInt(req.getParameter("id"));
-			var name = req.getParameter("name");
-			var project = StringUtils.parseInt(req.getParameter("project"));
-			var owner = StringUtils.parseInt(req.getParameter("owner"));
-			var status = StringUtils.parseStatus(req.getParameter("status"));
-			var from = StringUtils.parseDate(req.getParameter("from"));
-			var to = StringUtils.parseDate(req.getParameter("to"));
-			var remark = req.getParameter("remark");
 			
 			var form = new TaskForm(name, project, owner, from, to, status, remark);
 			if(id == 0) {
@@ -97,6 +97,8 @@ public class TaskServlet extends HttpServlet{
 			
 		} catch (TaskAppException e) {
 			req.setAttribute("errors", e.getMessages());
+			req.setAttribute("project", projectDao.findById(project));
+			req.setAttribute("members", accountDao.search(null, null));
 			getServletContext().getRequestDispatcher("/views/project-edit.jsp").forward(req, resp);
 		}
 

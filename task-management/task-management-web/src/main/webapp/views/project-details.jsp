@@ -99,9 +99,7 @@
 								<th>End</th>
 								<th>Status</th>
 								<th>Remark</th>
-								<c:if test="${ loginUser.manager }">
-									<th></th>
-								</c:if>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -117,17 +115,15 @@
 									<td>${ item.dateTo() }</td>
 									<td>${ item.status() }</td>
 									<td>${ item.remark() }</td>
-									<c:if test="${ loginUser.manager }">
-										<td>
-											<c:url value="/manager/task/edit" var="editTask">
-												<c:param name="id" value="${ item.id() }"></c:param>
-												<c:param name="projectId" value="${ item.projectId() }"></c:param>
-											</c:url>
-											<a href="${ editTask }" class="btn btn-link">
-												<i class="bi bi-pencil"></i>
-											</a>
-										</td>
-									</c:if>
+									<td>
+										<c:url value="/manager/task/edit" var="editTask">
+											<c:param name="id" value="${ item.id() }"></c:param>
+											<c:param name="projectId" value="${ item.projectId() }"></c:param>
+										</c:url>
+										<a href="${ editTask }" class="btn btn-link">
+											<i class="bi bi-pencil"></i>
+										</a>
+									</td>
 								</tr>
 							
 							</c:forEach>
