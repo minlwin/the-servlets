@@ -5,8 +5,11 @@ import java.io.IOException;
 import com.jdc.task.model.TaskAppException;
 import com.jdc.task.model.dao.AccountDao;
 import com.jdc.task.model.dao.ProjectDao;
+import com.jdc.task.model.dao.TaskDao;
 import com.jdc.task.model.db.AccountDb;
 import com.jdc.task.model.db.ProjectDb;
+import com.jdc.task.model.db.TaskDb;
+import com.jdc.task.model.dto.Account;
 import com.jdc.task.model.dto.Account.Role;
 import com.jdc.task.model.dto.form.ProjectForm;
 import com.jdc.task.model.utils.StringUtils;
@@ -27,11 +30,13 @@ public class ProjectServlet extends HttpServlet{
 	
 	private ProjectDao projectDao;
 	private AccountDao accountDao;
+	private TaskDao taskDao;
 	
 	@Override
 	public void init() throws ServletException {
 		accountDao = new AccountDb();
 		projectDao = new ProjectDb();
+		taskDao = new TaskDb();
 	}
 	
 	@Override
@@ -57,6 +62,16 @@ public class ProjectServlet extends HttpServlet{
 		case "/member/project": {
 			
 			if(id > 0) {
+				if(req.getSession().getAttribute("loginUser") instanceof Account loginUser) {
+					
+					var taskList = switch (loginUser.role()) {
+					case Manager -> taskDao.findProjectTasks(id);
+					default -> taskDao.findProjectTasksForOwner(id, loginUser.id());
+					};
+					
+					req.setAttribute("taskList",  taskList);
+					
+				}
 				yield "project-details";
 			}
 			

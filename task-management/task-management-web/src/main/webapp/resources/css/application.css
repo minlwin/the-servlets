@@ -2,7 +2,7 @@ html {
 	height: 100vh;
 }
 
-body {
+body.top {
 	height: 100vh;
 	margin: 0;
 	padding: 0;
@@ -10,6 +10,10 @@ body {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
+}
+
+body {
+	background-color: aqua;
 }
 
 .loginForm {

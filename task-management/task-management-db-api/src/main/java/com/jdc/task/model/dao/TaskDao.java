@@ -52,4 +52,23 @@ public interface TaskDao {
 	 * @return Task Data
 	 */
 	List<Task> search(Status status, String owner, LocalDate from, LocalDate to);
+	
+	/**
+	 * Find Tasks for specific project
+	 * 
+	 * @param projectId Project ID
+	 * 
+	 * @return Task Data
+	 */
+	List<Task> findProjectTasks(int projectId);
+	
+	/**
+	 * Find Tasks for specific project and specific task owner
+	 * 
+	 * @param projectId
+	 * @param ownerId
+	 * @return
+	 */
+	List<Task> findProjectTasksForOwner(int projectId, int ownerId);
+	
 }

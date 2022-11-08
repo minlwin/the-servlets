@@ -249,4 +249,61 @@ public class TaskDb implements TaskDao{
 			Errors.make(list);
 		}
 	}
+
+	@Override
+	public List<Task> findProjectTasks(int projectId) {
+		var result = new ArrayList<Task>();
+		var sql = """
+				select distinct t.id, t.name, t.date_from, t.date_to, t.status, t.remark, 
+				tao.id, tao.name, p.id, p.name, p.description, po.id, po.name from task t 
+				join account tao on tao.id = t.owner_id 
+				join project p on p.id = t.project_id 
+				join account po on po.id = p.owner_id 
+				join task_date td on td.task_id = t.id 
+				where p.id = ? order by t.date_from""";
+		
+		try(var conn = DataSourceManager.dataSource().getConnection();
+				var stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setInt(1, projectId);
+			
+			var rs = stmt.executeQuery();
+			while(rs.next()) {
+				result.add(mapper.map(rs));
+			}
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}
+		return result;
+	}
+
+	@Override
+	public List<Task> findProjectTasksForOwner(int projectId, int ownerId) {
+		var result = new ArrayList<Task>();
+		var sql = """
+				select distinct t.id, t.name, t.date_from, t.date_to, t.status, t.remark, 
+				tao.id, tao.name, p.id, p.name, p.description, po.id, po.name from task t 
+				join account tao on tao.id = t.owner_id 
+				join project p on p.id = t.project_id 
+				join account po on po.id = p.owner_id 
+				join task_date td on td.task_id = t.id 
+				where t.owner_id = ? and p.id = ? order by t.date_from""";
+		
+		try(var conn = DataSourceManager.dataSource().getConnection();
+				var stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setInt(1, ownerId);
+			stmt.setInt(2, projectId);
+			
+			var rs = stmt.executeQuery();
+			while(rs.next()) {
+				result.add(mapper.map(rs));
+			}
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}
+		return result;
+	}
 }

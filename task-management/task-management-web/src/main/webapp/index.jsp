@@ -15,7 +15,7 @@
 <c:url var="commoncss" value="/resources/css/application.css"></c:url>
 <link rel="stylesheet" href="${ commoncss }" />
 </head>
-<body>
+<body class="top">
 
 	<jsp:include page="/includes/navigation.jsp"></jsp:include>
 </body>

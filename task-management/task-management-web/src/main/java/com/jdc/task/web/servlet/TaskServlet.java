@@ -9,7 +9,6 @@ import com.jdc.task.model.dao.TaskDao;
 import com.jdc.task.model.db.AccountDb;
 import com.jdc.task.model.db.ProjectDb;
 import com.jdc.task.model.db.TaskDb;
-import com.jdc.task.model.dto.Account.Role;
 import com.jdc.task.model.dto.form.TaskForm;
 import com.jdc.task.model.utils.StringUtils;
 
@@ -43,6 +42,7 @@ public class TaskServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		var id = StringUtils.parseInt(req.getParameter("id"));
+		var projectId = StringUtils.parseInt(req.getParameter("projectId"));
 		
 		var status = StringUtils.parseStatus(req.getParameter("status"));
 		var owner = req.getParameter("owner");
@@ -57,14 +57,12 @@ public class TaskServlet extends HttpServlet{
 		
 		var page = switch (path) {
 		case "/manager/task/edit", "/member/task/edit": {
+			req.setAttribute("project", projectDao.findById(projectId));
 			req.setAttribute("projects", projectDao.search(null, null, null, false));
-			req.setAttribute("members", accountDao.search(Role.Member, null));
+			req.setAttribute("members", accountDao.search(null, null));
 			yield "task-edit";
 		}
 		case "/member/task": {
-			if(id > 0) {
-				yield "task-details";
-			}
 			req.setAttribute("list", taskDao.search(status, owner, from, to));
 			yield "task-list";
 		}
@@ -95,7 +93,7 @@ public class TaskServlet extends HttpServlet{
 				taskDao.update(id, form);
 			}
 			
-			resp.sendRedirect(req.getContextPath().concat("/member/task?id=%d".formatted(id)));
+			resp.sendRedirect(req.getContextPath().concat("/member/project?id=%d".formatted(project)));
 			
 		} catch (TaskAppException e) {
 			req.setAttribute("errors", e.getMessages());
