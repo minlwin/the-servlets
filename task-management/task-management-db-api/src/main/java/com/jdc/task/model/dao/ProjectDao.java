@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.jdc.task.model.dto.Project;
+import com.jdc.task.model.dto.ProjectItem;
+import com.jdc.task.model.dto.SummaryData;
 import com.jdc.task.model.dto.form.ProjectForm;
 
 /**
@@ -51,4 +53,20 @@ public interface ProjectDao {
 	 * @return Project Data
 	 */
 	List<Project> search(String ownerName, String projectName, LocalDate date, Boolean finished);
+	
+	/**
+	 * Find Owned Project for member
+	 * 
+	 * @param taskOwnerId
+	 * @return
+	 */
+	List<ProjectItem> findOwnedProjectItems(int taskOwnerId);
+	
+	/**
+	 * Find Project summary for members 
+	 * 
+	 * @param taskOwnerId
+	 * @return
+	 */
+	List<SummaryData> findOwnedProjectSummary(int taskOwnerId);
 }

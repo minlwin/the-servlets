@@ -11,6 +11,7 @@ import com.jdc.task.model.ResultSetMapper;
 import com.jdc.task.model.TaskAppException;
 import com.jdc.task.model.dao.TaskDao;
 import com.jdc.task.model.db.mapper.TaskMapper;
+import com.jdc.task.model.dto.SummaryData;
 import com.jdc.task.model.dto.Task;
 import com.jdc.task.model.dto.Task.Status;
 import com.jdc.task.model.dto.form.TaskForm;
@@ -306,4 +307,70 @@ public class TaskDb implements TaskDao{
 		}
 		return result;
 	}
+
+	@Override
+	public List<Task> findProjectTasksForOwner(int projectId, int ownerId, Status status) {
+		var result = new ArrayList<Task>();
+		var sql = """
+				select distinct t.id, t.name, t.date_from, t.date_to, t.status, t.remark, 
+				tao.id, tao.name, p.id, p.name, p.description, po.id, po.name from task t 
+				join account tao on tao.id = t.owner_id 
+				join project p on p.id = t.project_id 
+				join account po on po.id = p.owner_id 
+				join task_date td on td.task_id = t.id 
+				where t.owner_id = ? and t.project_id = ? and t.status = ? order by t.date_from""";
+		
+		try(var conn = DataSourceManager.dataSource().getConnection();
+				var stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setInt(1, ownerId);
+			stmt.setInt(2, projectId);
+			stmt.setString(3, status.name());
+			
+			var rs = stmt.executeQuery();
+			while(rs.next()) {
+				result.add(mapper.map(rs));
+			}
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}
+		return result;
+	}
+
+	@Override
+	public List<SummaryData> getOwnedTasks(int ownerId) {
+		
+		var result = new ArrayList<SummaryData>();
+		
+		for(var status : Status.values()) {
+			result.add(new SummaryData(status.name(), getOwnedTasksByStatus(ownerId, status)));
+		}
+		
+		result.add(new SummaryData("total", result.stream().mapToLong(a -> a.value()).sum()));
+		
+		return result;
+	}
+	
+	private long getOwnedTasksByStatus(int ownerId, Status status) {
+		
+		var sql = "select count(id) from task where owner_id = ? and status = ?";
+		try(var conn = DataSourceManager.dataSource().getConnection();
+				var stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setInt(1, ownerId);
+			stmt.setString(2, status.name());
+			
+			var rs = stmt.executeQuery();
+			while(rs.next()) {
+				return rs.getLong(1);
+			}
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}
+		
+		return 0;
+	}
+	
 }

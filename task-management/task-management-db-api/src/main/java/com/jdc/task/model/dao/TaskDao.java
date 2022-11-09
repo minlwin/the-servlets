@@ -3,6 +3,7 @@ package com.jdc.task.model.dao;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.jdc.task.model.dto.SummaryData;
 import com.jdc.task.model.dto.Task;
 import com.jdc.task.model.dto.Task.Status;
 import com.jdc.task.model.dto.form.TaskForm;
@@ -71,4 +72,21 @@ public interface TaskDao {
 	 */
 	List<Task> findProjectTasksForOwner(int projectId, int ownerId);
 	
+	/**
+	 * Find Tasks for specific project, specific task owner and status
+	 * 
+	 * @param projectId
+	 * @param ownerId
+	 * @param status
+	 * @return
+	 */
+	List<Task> findProjectTasksForOwner(int projectId, int ownerId, Status status);
+	
+	/**
+	 * Find task summary for Task Owner
+	 * 
+	 * @param ownerId
+	 * @return
+	 */
+	List<SummaryData> getOwnedTasks(int ownerId);
 }

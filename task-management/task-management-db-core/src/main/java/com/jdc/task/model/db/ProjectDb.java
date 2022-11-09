@@ -12,6 +12,8 @@ import com.jdc.task.model.TaskAppException;
 import com.jdc.task.model.dao.ProjectDao;
 import com.jdc.task.model.db.mapper.ProjectMapper;
 import com.jdc.task.model.dto.Project;
+import com.jdc.task.model.dto.ProjectItem;
+import com.jdc.task.model.dto.SummaryData;
 import com.jdc.task.model.dto.form.ProjectForm;
 import com.jdc.task.model.utils.DataSourceManager;
 import com.jdc.task.model.utils.Errors;
@@ -169,6 +171,69 @@ public class ProjectDb implements ProjectDao{
 		if(!list.isEmpty()) {
 			Errors.make(list);
 		}
+	}
+
+	@Override
+	public List<ProjectItem> findOwnedProjectItems(int taskOwnerId) {
+		
+		var sql = """
+				select p.id, p.name from project p join task t on p.id = t.project_id 
+				where t.owner_id = ? 
+				""";
+		var result = new ArrayList<ProjectItem>();
+		try(var conn = DataSourceManager.dataSource().getConnection(); 
+				var stmt = conn.prepareStatement(sql.toString())) {
+			
+			stmt.setInt(1, taskOwnerId);
+			
+			var rs = stmt.executeQuery();
+			while(rs.next()) {
+				result.add(new ProjectItem(rs.getInt(1), rs.getString(2)));
+			}
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<SummaryData> findOwnedProjectSummary(int taskOwnerId) {
+		
+		var onGoing = findOwnedProjectSummaryByStatus(taskOwnerId, false);
+		var finished = findOwnedProjectSummaryByStatus(taskOwnerId, true);
+		
+		return List.of(
+				new SummaryData("On Going", onGoing),
+				new SummaryData("Finished", finished),
+				new SummaryData("Total", onGoing + finished)
+				);
+	}
+	
+	private long findOwnedProjectSummaryByStatus(int taskOwnerId, boolean finished) {
+
+		var sql = """
+				select count(p.id) from project p join task t on p.id = t.project_id 
+				where t.owner_id = ? and p.finished = ? 
+				""";
+		
+		try(var conn = DataSourceManager.dataSource().getConnection(); 
+				var stmt = conn.prepareStatement(sql.toString())) {
+			
+			stmt.setInt(1, taskOwnerId);
+			stmt.setBoolean(2, finished);
+			
+			var rs = stmt.executeQuery();
+			while(rs.next()) {
+				return rs.getLong(1);
+			}
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}
+		
+		return 0;
 	}
 
 }
