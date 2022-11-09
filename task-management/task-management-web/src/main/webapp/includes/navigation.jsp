@@ -6,7 +6,9 @@
 	
 	<div class="container">
 		<c:url var="home" value="/"></c:url>
-		<a href="${ home }" class="navbar-brand">
+		<c:url var="memberHome" value="/member/home"></c:url>
+		
+		<a href="${ empty pageContext.request.remoteUser ? home : memberHome }" class="navbar-brand">
 			<i class="bi bi-stack"></i> Task Manager
 		</a>
 		
@@ -41,11 +43,28 @@
 							<i class="bi bi-people"></i> Members
 						</a>
 					</li>
-					<li class="nav-item">
-						<a href="#" id="logoutBtn" class="nav-link">
-							<i class="bi bi-lock"></i> Sign Out
+					
+					<li class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle ${ param.active eq 'home' ? 'active' : '' }" 
+							role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-person"></i> ${ loginUser.name() }
 						</a>
+						
+						<ul class="dropdown-menu">
+							<li>
+								<c:url value="/member/password" var="changePass"></c:url>
+								<a href="${ changePass }" class="dropdown-item">
+									<i class="bi bi-gear"></i> Change Password
+								</a>
+							</li>
+							<li>
+								<a href="#" id="logoutBtn" class="dropdown-item">
+									<i class="bi bi-lock"></i> Sign Out
+								</a>
+							</li>
+						</ul>
 					</li>
+					
 				</c:otherwise>	
 			</c:choose>
 		</ul>

@@ -33,9 +33,10 @@ public class SecurityServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		try {
+			var username = req.getParameter("username");
+			var password = req.getParameter("password");
+
 			if ("/login".equals(req.getServletPath())) {
-				var username = req.getParameter("username");
-				var password = req.getParameter("password");
 
 				req.login(username, password);
 				
@@ -43,7 +44,7 @@ public class SecurityServlet extends HttpServlet {
 			} else {
 				req.logout();
 			}
-			resp.sendRedirect(req.getServletContext().getContextPath());
+			resp.sendRedirect(req.getServletContext().getContextPath().concat("/member/home"));
 		} catch (Exception e) {
 			req.setAttribute("errors", List.of("Please check Login Information."));
 			getServletContext().getRequestDispatcher("/views/login.jsp").forward(req, resp);

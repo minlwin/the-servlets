@@ -56,4 +56,13 @@ public interface AccountDao {
 	 * @return
 	 */
 	List<Account> search(Role role, String name);
+	
+	/**
+	 * Change Password Operation
+	 * 
+	 * @param memberId Account ID
+	 * @param oldPass Old Password
+	 * @param newPass New Password
+	 */
+	void changePass(int memberId, String oldPass, String newPass);
 }

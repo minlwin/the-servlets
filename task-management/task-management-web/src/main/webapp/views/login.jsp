@@ -37,6 +37,14 @@
 				<input class="form-control" type="password" placeholder="Enter Password" name="password" required="required" />
 			</div>
 			
+			<c:if test="${ not empty errors }">
+				<ul class="alert alert-warning">
+					<c:forEach var="error" items="${ errors }">
+						<li>${ error }</li>
+					</c:forEach>
+				</ul>
+			</c:if>
+
 			<div class="mt-4">
 				<button type="submit" class="btn btn-outline-primary px-4">
 					<i class="bi bi-key me-2"></i> Login

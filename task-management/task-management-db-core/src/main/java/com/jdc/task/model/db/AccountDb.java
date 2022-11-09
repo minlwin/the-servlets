@@ -178,5 +178,68 @@ public class AccountDb implements AccountDao{
 		}
 	}
 
+	@Override
+	public void changePass(int memberId, String oldPass, String newPass) {
+
+		var errors = new ArrayList<String>();
+		
+		if(StringUtils.isEmpty(oldPass)) {
+			errors.add("Please enter Old Password.");
+		}
+		
+		if(StringUtils.isEmpty(newPass)) {
+			errors.add("Please enter New Password.");
+		}
+		
+		if(!errors.isEmpty()) {
+			Errors.make(errors);
+		}
+		
+		if(memberId == 0) {
+			Errors.make(List.of("Invalid Member Id."));
+		}
+				
+		if(!isSameOldPassword(memberId, oldPass)) {
+			Errors.make(List.of("Invalid Old Password."));
+		}
+		
+		var sql = "update account set password = ? where id = ?";
+		
+		try(var conn = DataSourceManager.dataSource().getConnection(); 
+				var stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setString(1, oldPass);
+			stmt.setInt(2, memberId);
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}		
+	}
+
+	private boolean isSameOldPassword(int memberId, String oldPass) {
+		
+		var sql = "select password from account where id = ? and password = ?";
+		
+		try(var conn = DataSourceManager.dataSource().getConnection(); 
+				var stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setInt(1, memberId);
+			stmt.setString(2, oldPass);
+			
+			var rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				return true;
+			}
+			
+		} catch (SQLException e) {
+			throw new TaskAppException(List.of(e.getMessage()), e);
+		}
+		
+		return false;
+	}
+
 
 }
