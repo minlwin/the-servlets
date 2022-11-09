@@ -70,9 +70,7 @@
 						<th>Start Date</th>
 						<th>Description</th>
 						<th>Status</th>
-						<c:if test="${ loginUser.manager }">
-							<th></th>
-						</c:if>
+						<th></th>
 					</tr>
 				</thead>
 				
@@ -86,16 +84,14 @@
 							<td>${ item.start() }</td>
 							<td>${ item.description() }</td>
 							<td>${ item.finished() ? 'Finished' : 'On Going' }</td>
-							<c:if test="${ loginUser.manager }">
-								<td>
-									<c:url var="details" value="/member/project">
-										<c:param name="id" value="${ item.id() }"></c:param>
-									</c:url>
-									<a href="${ details }" class="btn btn-link">
-										<i class="bi bi-send"></i>
-									</a>
-								</td>
-							</c:if>
+							<td>
+								<c:url var="details" value="/member/project">
+									<c:param name="id" value="${ item.id() }"></c:param>
+								</c:url>
+								<a href="${ details }" class="btn btn-link">
+									<i class="bi bi-send"></i>
+								</a>
+							</td>
 						</tr>
 					
 					</c:forEach>

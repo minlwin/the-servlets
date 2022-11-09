@@ -77,7 +77,7 @@ public class TaskServlet extends HttpServlet{
 		
 		var id = StringUtils.parseInt(req.getParameter("id"));
 		var name = req.getParameter("name");
-		var project = StringUtils.parseInt(req.getParameter("project"));
+		var project = StringUtils.parseInt(req.getParameter("projectId"));
 		var owner = StringUtils.parseInt(req.getParameter("owner"));
 		var status = StringUtils.parseStatus(req.getParameter("status"));
 		var from = StringUtils.parseDate(req.getParameter("from"));
@@ -99,7 +99,7 @@ public class TaskServlet extends HttpServlet{
 			req.setAttribute("errors", e.getMessages());
 			req.setAttribute("project", projectDao.findById(project));
 			req.setAttribute("members", accountDao.search(null, null));
-			getServletContext().getRequestDispatcher("/views/project-edit.jsp").forward(req, resp);
+			getServletContext().getRequestDispatcher("/views/task-edit.jsp").forward(req, resp);
 		}
 
 	}

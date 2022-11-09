@@ -69,7 +69,7 @@
 						<h5>Task Information</h5>
 					</div>
 					
-					<div class="card-body">
+					<form method="post" class="card-body">
 						<!-- ID -->
 						<input type="hidden" name="id" value="${ empty dto ? 0 : dto.id() }" />
 						
@@ -86,7 +86,7 @@
 						<!-- Task Owner -->
 						<div class="mb-3">
 							<label class="form-label">Task Owner</label>
-							<select name="ownerId" class="form-select">
+							<select name="owner" class="form-select">
 								<option value="">Select Member</option>
 								<c:forEach var="item" items="${ members }">
 									<option value="${ item.id() }"
@@ -144,7 +144,7 @@
 							</button>
 						</div>
 
-					</div>
+					</form>
 				</div>
 				
 			</div>

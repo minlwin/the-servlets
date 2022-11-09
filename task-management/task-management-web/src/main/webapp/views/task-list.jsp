@@ -30,10 +30,10 @@
 				<label class="form-label">Status</label>
 				<select name="status" class="form-select">
 					<option value="">All Status</option>
-					<option value="false" ${ param.status eq 'Open'  ? 'selected' : '' }>Open</option>
-					<option value="true" ${ param.status eq 'Started' ? 'selected' : '' }>Started</option>
-					<option value="true" ${ param.status eq 'Late' ? 'selected' : '' }>Late</option>
-					<option value="true" ${ param.status  eq 'Finished' ? 'selected' : '' }>Finished</option>
+					<option value="Open" ${ param.status eq 'Open'  ? 'selected' : '' }>Open</option>
+					<option value="Started" ${ param.status eq 'Started' ? 'selected' : '' }>Started</option>
+					<option value="Late" ${ param.status eq 'Late' ? 'selected' : '' }>Late</option>
+					<option value="Finished" ${ param.status  eq 'Finished' ? 'selected' : '' }>Finished</option>
 				</select>
 			</div>
 			
