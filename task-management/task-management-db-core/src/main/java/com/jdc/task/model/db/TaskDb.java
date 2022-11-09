@@ -347,7 +347,7 @@ public class TaskDb implements TaskDao{
 			result.add(new SummaryData(status.name(), getOwnedTasksByStatus(ownerId, status)));
 		}
 		
-		result.add(new SummaryData("total", result.stream().mapToLong(a -> a.value()).sum()));
+		result.add(new SummaryData("Total", result.stream().mapToLong(a -> a.value()).sum()));
 		
 		return result;
 	}
