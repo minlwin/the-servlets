@@ -50,6 +50,21 @@ public class StateModelImpl implements StateModel {
 		return null;
 	}
 
+
+	@Override
+	public State findById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public State update(int id, StateForm form) {
+		
+		validate(form);
+		
+		return null;
+	}
+
 	private void validate(StateForm form) {
 		
 		if(null == form) {
@@ -68,5 +83,4 @@ public class StateModelImpl implements StateModel {
 			throw new IllegalArgumentException("Please enter capital of state.");
 		}		
 	}
-
 }

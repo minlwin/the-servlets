@@ -2,6 +2,7 @@ package com.jdc.basic.location.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.jdc.basic.location.model.StateModel;
 import com.jdc.basic.location.model.dto.State;
@@ -63,7 +65,7 @@ public class StateModelTest {
 		assertEquals(id, state.id());
 	}
 	
-	@Test
+	@ParameterizedTest
 	@Order(2)
 	@CsvSource(value = {
 			",region,capital,Please enter name of state.",
@@ -79,22 +81,42 @@ public class StateModelTest {
 		assertEquals(message, exception.getMessage());
 	}
 	
-	@Test
+	@ParameterizedTest
 	@Order(3)
-	void test_update_success() {
+	@CsvFileSource(resources = "/state/test_update_success.txt", delimiter = '\t')
+	void test_update_success(int id, String name, String region, String capital) {
 		
+		var form = new StateForm(name, region, capital);
+		
+		var state = model.update(id, form);
+		
+		assertNotNull(state);
+		assertEquals(name, state.name());
+		assertEquals(region, state.region());
+		assertEquals(capital, state.capital());
+		assertEquals(id, state.id());
 	}
 	
-	@Test
+	@ParameterizedTest
 	@Order(4)
-	void test_find_by_id_found() {
+	@CsvFileSource(resources = "/state/test_find_by_id_found.txt", delimiter = '\t')
+	void test_find_by_id_found(int id, String name, String region, String capital) {
 		
+		var result = model.findById(id);
+		
+		assertNotNull(result);
+		assertEquals(id, result.id());
+		assertEquals(name, result.name());
+		assertEquals(region, result.region());
+		assertEquals(capital, result.capital());
 	}
 	
-	@Test
+	@ParameterizedTest
 	@Order(5)
-	void test_find_by_id_not_found() {
-		
+	@ValueSource(ints = {0, 5, 6})
+	void test_find_by_id_not_found(int id) {
+		var result = model.findById(id);
+		assertNull(result);
 	}
 	
 	@Test

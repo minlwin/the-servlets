@@ -7,4 +7,8 @@ public interface StateModel {
 
 	State create(StateForm form);
 
+	State findById(int id);
+
+	State update(int id, StateForm form);
+
 }

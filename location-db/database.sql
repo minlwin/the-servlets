@@ -8,7 +8,7 @@ use location_db
 
 create table state(
 	id int primary key auto_increment,
-	name varchar(20) unique not null,
+	name varchar(40) unique not null,
 	region varchar(20) not null,
 	capital varchar(20) not null
 );
