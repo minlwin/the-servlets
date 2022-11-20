@@ -12,3 +12,8 @@ create table state(
 	region varchar(20) not null,
 	capital varchar(20) not null
 );
+
+insert into state(name, region, capital) values ('Ayeyarwady Region', 'Lower', 'Pathein');
+insert into state(name, region, capital) values ('Bago Region', 'Lower', 'Bago');
+insert into state(name, region, capital) values ('Chin State', 'West', 'Hakha');
+insert into state(name, region, capital) values ('Kachin State', 'North', 'Myitkyina');
