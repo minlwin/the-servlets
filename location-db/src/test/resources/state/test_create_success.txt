@@ -1,15 +1,11 @@
-1	Ayeyarwady Region	Lower	Pathein
-1	Bago Region	Lower	Bago
-1	Chin State	West	Hakha
-1	Kachin State	North	Myitkyina
-1	Kayah State	East	Loikaw
-1	Kayin State	South	Hpa-an
-1	Magway Region	Central	Magwe
-1	Mandalay Region	Central	Mandalay
-1	Mon State	South	Mawlamyine
-1	Naypyidaw Union Territory	Central	Naypyidaw
-1	Rakhine State	West	Sittwe
-1	Sagaing Region	North	Monywa
-1	Shan State	East	Taunggyi
-1	Tanintharyi Region	South	Dawei
-1	Yangon Region	Lower	Yangon
+5	Kayah State	East	Loikaw
+5	Kayin State	South	Hpa-an
+5	Magway Region	Central	Magwe
+5	Mandalay Region	Central	Mandalay
+5	Mon State	South	Mawlamyine
+5	Naypyidaw Union Territory	Central	Naypyidaw
+5	Rakhine State	West	Sittwe
+5	Sagaing Region	North	Monywa
+5	Shan State	East	Taunggyi
+5	Tanintharyi Region	South	Dawei
+5	Yangon Region	Lower	Yangon

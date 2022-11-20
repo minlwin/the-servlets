@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,6 +18,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import com.jdc.basic.location.model.StateModel;
 import com.jdc.basic.location.model.dto.State;
 import com.jdc.basic.location.model.form.StateForm;
+import com.jdc.basic.location.model.impl.StateModelImpl;
+import com.jdc.basic.location.util.TestUtils;
 
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -24,6 +27,23 @@ import com.jdc.basic.location.model.form.StateForm;
 public class StateModelTest {
 	
 	private StateModel model;
+		
+	// Before each 
+	@BeforeEach
+	void prepareTest() {
+		
+		// Truncate table
+		TestUtils.truncate("state");
+		
+		// Prepare Data for Update Method and Find By Id Method
+		TestUtils.execute("insert into state(name, region, capital) values ('Ayeyarwady Region', 'Lower', 'Pathein');");
+		TestUtils.execute("insert into state(name, region, capital) values ('Bago Region', 'Lower', 'Bago');");
+		TestUtils.execute("insert into state(name, region, capital) values ('Chin State', 'West', 'Hakha');");
+		TestUtils.execute("insert into state(name, region, capital) values ('Kachin State', 'North', 'Myitkyina');");
+		
+		// Create Model Object
+		model = new StateModelImpl(TestUtils.getDataSource());
+	}
 	
 	@ParameterizedTest
 	@CsvFileSource(resources = "/state/test_create_success.txt", delimiter = '\t')
