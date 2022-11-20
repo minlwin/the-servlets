@@ -2,6 +2,7 @@ package com.jdc.basic.location.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Order;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import com.jdc.basic.location.model.StateModel;
 import com.jdc.basic.location.model.dto.State;
@@ -26,7 +28,7 @@ public class StateModelTest {
 	@ParameterizedTest
 	@CsvFileSource(resources = "/state/test_create_success.txt", delimiter = '\t')
 	@Order(1)
-	void test_create_success(String name, String region, String capital, int id) {
+	void test_create_success(int id, String name, String region, String capital) {
 		// Prepare Inputs (Parameters)
 		StateForm form = new StateForm(name, region, capital);
 		
@@ -43,8 +45,18 @@ public class StateModelTest {
 	
 	@Test
 	@Order(2)
-	void test_create_error() {
-		System.out.println("Create Error");
+	@CsvSource(value = {
+			",region,capital,Please enter name of state.",
+			"name,,capital,Please enter region of state.",
+			"name,region,,Please enter capital of state.",
+	})
+	void test_create_error(String name, String region, String capital, String message) {
+		
+		var form = new StateForm(name, region, capital);
+		
+		var exception = assertThrows(IllegalArgumentException.class, () -> model.create(form));
+		
+		assertEquals(message, exception.getMessage());
 	}
 	
 	@Test
