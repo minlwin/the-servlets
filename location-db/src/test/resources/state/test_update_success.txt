@@ -1,0 +1,4 @@
+1	Kayah State	East	Loikaw
+2	Kayin State	South	Hpa-an
+3	Magway Region	Central	Magwe
+4	Mandalay Region	Central	Mandalay

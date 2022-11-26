@@ -1,0 +1,4 @@
+1	Ayeyarwady Region	Lower	Pathein
+2	Bago Region	Lower	Bago
+3	Chin State	West	Hakha
+4	Kachin State	North	Myitkyina

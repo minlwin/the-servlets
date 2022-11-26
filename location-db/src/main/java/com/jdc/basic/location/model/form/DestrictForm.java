@@ -1,8 +1,8 @@
 package com.jdc.basic.location.model.form;
 
-public record TownshipForm(
+public record DestrictForm(
 		String name,
-		int districtId
+		int stateId
 		) {
 
 }
