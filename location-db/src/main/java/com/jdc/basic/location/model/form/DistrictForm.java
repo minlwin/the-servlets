@@ -1,6 +1,6 @@
 package com.jdc.basic.location.model.form;
 
-public record DestrictForm(
+public record DistrictForm(
 		String name,
 		int stateId
 		) {
