@@ -5,13 +5,20 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 
 public class TestUtils {
+	
+	private static DataSource dataSource;
 
 	public static DataSource getDataSource() {
-		var ds = new BasicDataSource();
-		ds.setUrl("jdbc:mysql://localhost:3306/location_db");
-		ds.setUsername("location");
-		ds.setPassword("location");
-		return ds;
+		
+		if(null == dataSource) {
+			var ds = new BasicDataSource();
+			ds.setUrl("jdbc:mysql://localhost:3306/location_db");
+			ds.setUsername("location");
+			ds.setPassword("location");
+			dataSource = ds;
+		}
+		
+		return dataSource;
 	}
 
 	public static void truncate(String ... tables) {

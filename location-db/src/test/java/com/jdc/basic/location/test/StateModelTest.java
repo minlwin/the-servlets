@@ -5,21 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.jdc.basic.location.model.StateModel;
@@ -137,31 +131,5 @@ public class StateModelTest {
 		assertEquals(count, result.size());
 	}
 	
-	@ParameterizedTest
-	@Order(7)
-	@CsvSource({
-		"Ayeyarwady Region,1",
-		"Bago Region,1",
-		"Chin State,1",
-		"Kachin State,1",
-		"Kayah State,0"		
-	})
-	void test_find_count_by_name(String name, long count) {
-		var result = model.findCountByName(name);
-		assertEquals(count, result);
-	}
-	
-	@Disabled
-	@ParameterizedTest
-	@Order(8) 
-	@MethodSource("generateUploadArguments")
-	void test_upload(List<StateForm> states) {
-		var count = model.upload(states);
-		assertEquals(states.size(), count);
-	}
-	
-	static Stream<Arguments> generateUploadArguments() {
-		return null;
-	}
 	
 }

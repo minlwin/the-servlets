@@ -134,32 +134,6 @@ public class StateModelImpl implements StateModel {
 		return list;
 	}
 
-	@Override
-	public long findCountByName(String name) {
-		var sql = "select count(id) from state where name = ?";
-
-		try(var conn = dataSource.getConnection();
-				var stmt = conn.prepareStatement(sql)) {
-			stmt.setString(1, name);
-			
-			var rs = stmt.executeQuery();
-			
-			while(rs.next()) {
-				return rs.getLong(1);
-			}
-			
-		} catch (SQLException e) {
-			throw new IllegalStateException(e);
-		}	
-		
-		return 0;
-	}
-
-	@Override
-	public int upload(List<StateForm> forms) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 	
 	private State getData(ResultSet rs) throws SQLException{
 		return new State(

@@ -15,8 +15,4 @@ public interface StateModel {
 
 	List<State> search(String region, String name);
 
-	long findCountByName(String name);
-	
-	int upload(List<StateForm> forms);
-
 }
