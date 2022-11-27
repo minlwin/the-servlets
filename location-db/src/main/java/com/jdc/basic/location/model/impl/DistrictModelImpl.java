@@ -1,6 +1,7 @@
 package com.jdc.basic.location.model.impl;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -22,7 +23,8 @@ public class DistrictModelImpl implements DistrictModel {
 	public District create(DistrictForm form) {
 		
 		try(var conn = dataSource.getConnection();
-				var stmt = conn.prepareStatement("")) {
+				var stmt = conn.prepareStatement("", 
+						Statement.RETURN_GENERATED_KEYS)) {
 			
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);

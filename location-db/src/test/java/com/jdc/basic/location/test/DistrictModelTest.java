@@ -47,7 +47,7 @@ public class DistrictModelTest {
 	
 	@ParameterizedTest
 	@CsvFileSource(resources = "/district/test_find_by_id.txt", delimiter = '\t')
-	void test_find_by_id(int id, String name, int stateId, String stateName, String region) {
+	void test_find_by_id(int id, String name, int stateId, String stateName, String region, String capital) {
 
 		var result = model.findById(id);
 		
@@ -60,6 +60,7 @@ public class DistrictModelTest {
 		assertEquals(stateId, state.id());
 		assertEquals(stateName, state.name());
 		assertEquals(region, state.region());
+		assertEquals(capital, state.capital());
 	}
 	
 	@ParameterizedTest
