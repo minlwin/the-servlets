@@ -1,0 +1,6 @@
+1	Pathein	1	Pathein	1	Ayeyarwady Region	Lower	Pathein
+2	Kangyidaunt	1	Pathein	1	Ayeyarwady Region	Lower	Pathein
+3	Ngapudaw	1	Pathein	1	Ayeyarwady Region	Lower	Pathein
+4	Ma-ubin	2	Ma-ubin	1	Ayeyarwady Region	Lower	Pathein
+5	Danubyu	2	Ma-ubin	1	Ayeyarwady Region	Lower	Pathein
+6	Phyapon	3	Phyapon	1	Ayeyarwady Region	Lower	Pathein
