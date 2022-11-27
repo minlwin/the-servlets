@@ -1,0 +1,2 @@
+1	Hakha	3	Chin State	West
+2	Bhamo	4	Kachin State	North

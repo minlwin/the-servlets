@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.jdc.basic.location.model.DistrictModel;
 import com.jdc.basic.location.model.form.DistrictForm;
@@ -43,6 +46,7 @@ public class DistrictModelTest {
 	}
 	
 	@ParameterizedTest
+	@CsvFileSource(resources = "/district/test_find_by_id.txt", delimiter = '\t')
 	void test_find_by_id(int id, String name, int stateId, String stateName, String region) {
 
 		var result = model.findById(id);
@@ -59,12 +63,17 @@ public class DistrictModelTest {
 	}
 	
 	@ParameterizedTest
+	@ValueSource(ints = {0, 7})
 	void test_find_by_id_not_found(int id) {
 		var result = model.findById(id);
 		assertNull(result);
 	}
 	
 	@ParameterizedTest
+	@CsvSource({
+		",0,Please enter district name.",
+		"Pathein,0,Please select state for district.",
+	})
 	void test_validation(String name, Integer stateId, String message) {
 		var form = new DistrictForm(name, stateId);
 		var exception = assertThrows(IllegalArgumentException.class, () -> model.create(form));
@@ -72,6 +81,7 @@ public class DistrictModelTest {
 	}
 
 	@ParameterizedTest
+	@CsvFileSource(resources = "/district/test_create_success.txt", delimiter = '\t')
 	void test_create(int id, String name, int stateId, String stateName, String region) {
 		var form = new DistrictForm(name, stateId);
 		
@@ -89,6 +99,7 @@ public class DistrictModelTest {
 	}
 	
 	@ParameterizedTest
+	@CsvFileSource(resources = "/district/test_update.txt", delimiter = '\t')
 	void test_update(int id, String name, int stateId, String stateName, String region) {
 		var form = new DistrictForm(name, stateId);
 		
@@ -106,6 +117,16 @@ public class DistrictModelTest {
 	}
 	
 	@ParameterizedTest
+	@CsvSource({
+		"0,,6",
+		"1,,3",
+		"2,,2",
+		"3,,1",
+		"4,,0",
+		"1,Pathein,1",
+		"1,pa,1",
+		"1,cpa,0",
+	})
 	void test_search(Integer stateId, String name, int size) {
 		var list = model.search(stateId, name);
 		assertEquals(size, list.size());
